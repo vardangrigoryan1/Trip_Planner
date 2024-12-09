@@ -103,7 +103,7 @@ def profile_menu(username, feedback, places):
         elif choice == "2":
             print("\nFeedback by",username)
             for country, user_feedback in feedback:
-                if user_feedback.startswith(f"{username}:"):
+                if user_feedback.startswith(username + ":"):
                     print("- " + country + ": " + user_feedback.split(": ", 1)[1])
 
                     option = input("Would you like to delete this feedback? (Y/N): ")
