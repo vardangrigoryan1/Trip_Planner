@@ -77,14 +77,14 @@ def is_there_place(country, places):
     results = [place for place in results if place is not None]  #filter out None values
     if results:
         for place in results:
-            print(f"City: {place[1]}, Place to visit: {place[2]}")
+            print("City: " + place[1] +", Place to visit: " + place[2])
         return True
     return False
 
 #profile menu function
 def profile_menu(username, feedback, places):
     while True:
-        print(f"\nWelcome, {username}!")
+        print("\nWelcome, " + username + "!")
         print("1. Write Feedback About a Country")
         print("2. View my feedback")
         print("3. Search feedback by country")
@@ -96,22 +96,22 @@ def profile_menu(username, feedback, places):
         if choice == "1":
             country = input("Enter the name of the country: ")
             user_feedback = input("Enter your feedback: ")
-            feedback.append((country, f"{username}: {user_feedback}"))
+            feedback.append((country, username + ": " + user_feedback))
             save_feedback(feedback)
             print("Feedback saved successfully!")
 
         elif choice == "2":
-            print(f"\nFeedback by {username}:")
+            print("\nFeedback by",username)
             for country, user_feedback in feedback:
                 if user_feedback.startswith(f"{username}:"):
-                    print(f"- {country}: {user_feedback.split(': ', 1)[1]}")
+                    print("- " + country + ": " + user_feedback.split(": ", 1)[1])
 
                     option = input("Would you like to delete this feedback? (Y/N): ")
                     if option.lower() == "y":
                         feedback.remove((country, user_feedback))
-                        print(f"Feedback for '{country}' is deleted.")
+                        print("Feedback for '" + country + "' is deleted.")
                     elif option.lower() == "n":
-                        print(f"Feedback about {country} is not deleted")
+                        print("Feedback about",country,"is not deleted")
 
         elif choice == "3":
             country = input("Enter the name of the country: ")
@@ -134,11 +134,11 @@ def profile_menu(username, feedback, places):
 
 #search feedback by country
 def search_feedback(feedback, country):
-    print(f"\nFeedback about {country}:")
+    print("\nFeedback about " + country + ":")
     found = False
     for fb_country, user_feedback in feedback:
         if fb_country.lower() == country.lower():
-            print(f"- {user_feedback}")
+            print("- " + user_feedback)
             found = True
     if not found:
         print("No feedback found for this country.")
