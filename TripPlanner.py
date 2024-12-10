@@ -10,8 +10,8 @@ def load_accounts():
     with open(accounts_file, "r") as csv_file:
         reader = csv.DictReader(csv_file)
         for row in reader:
-            username = row['username']
-            password = row['password']
+            username = row["username"]
+            password = row["password"]
             accounts[username] = password
     return accounts
 
@@ -19,7 +19,7 @@ def load_accounts():
 def save_accounts(accounts):
     with open(accounts_file, "w", newline="") as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerow(['username', 'password'])  #write header row
+        writer.writerow(["username", "password"])  #write header row
         for username, password in accounts.items():  #write each account as a row
             writer.writerow([username, password])
 
@@ -45,8 +45,8 @@ def load_feedback():
     with open(feedback_file, "r") as csv_file:
         reader = csv.DictReader(csv_file)
         for row in reader:
-            country = row['country']
-            user_feedback = row['user_feedback']
+            country = row["country"]
+            user_feedback = row["user_feedback"]
             feedback.append((country, user_feedback))
     return feedback
 
@@ -54,7 +54,7 @@ def load_feedback():
 def save_feedback(feedback):
     with open(feedback_file, "w", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(['country', 'user_feedback'])  #write header row
+        writer.writerow(["country", "user_feedback"])  #write header row
         for country, user_feedback in feedback:
             writer.writerow([country, user_feedback])  #write each feedback as a row
 
@@ -64,9 +64,9 @@ def load_places():
     with open(places_file, "r") as csv_file:
         reader = csv.DictReader(csv_file)
         for row in reader:
-            country = row['Country']
-            city = row['City']
-            place_to_visit = row['Place']
+            country = row["Country"]
+            city = row["City"]
+            place_to_visit = row["Place"]
             places.append((country, city, place_to_visit))  #store as a tuple
     return places
 
@@ -79,6 +79,15 @@ def is_there_place(country, places):
         for place in results:
             print("City: " + place[1] +", Place to visit: " + place[2])
         return True
+    return False
+
+def is_there_country(country, places):
+    #using map to search for the country in places
+    results = list(map(lambda place: place if place[0].lower() == country.lower() else None, places))
+    results = [place for place in results if place is not None]  #filter out None values
+    if results:
+        for place in results:
+            return True
     return False
 
 #profile menu function
@@ -94,16 +103,28 @@ def profile_menu(username, feedback, places):
         choice = input("Enter your choice: ")
 
         if choice == "1":
-            country = input("Enter the name of the country: ")
-            user_feedback = input("Enter your feedback: ")
-            feedback.append((country, username + ": " + user_feedback))
-            save_feedback(feedback)
-            print("Feedback saved successfully!")
+                while True:
+                    country = input("Enter the name of the country (or type 'exit' to quit): ")
+
+                    if country.lower() == "exit":
+                        print("Exiting...")
+                        break  #exit the feedback loop if user types 'exit'
+
+                    if is_there_country(country, places):  #check if the country exists in the list
+                        user_feedback = input("Enter your feedback: ")
+                        feedback.append((country, username + ": " + user_feedback))  #append feedback
+                        save_feedback(feedback)  #save the feedback
+                        print("Feedback saved successfully!")
+                        break  #exit the loop after saving feedback
+                    else:
+                        print("No such country: " + country + ". Please enter a valid country or type 'exit' to quit.")
 
         elif choice == "2":
             print("\nFeedback by",username)
+            found_feedback = False #flag to check if feedback exists
             for country, user_feedback in feedback:
                 if user_feedback.startswith(username + ":"):
+                    found_feedback = True #feedback exists
                     print("- " + country + ": " + user_feedback.split(": ", 1)[1])
 
                     option = input("Would you like to delete this feedback? (Y/N): ")
@@ -112,6 +133,9 @@ def profile_menu(username, feedback, places):
                         print("Feedback for '" + country + "' is deleted.")
                     elif option.lower() == "n":
                         print("Feedback about",country,"is not deleted")
+                        
+            if not found_feedback: # If no feedback found
+                print("No feedback found.")
 
         elif choice == "3":
             country = input("Enter the name of the country: ")
@@ -198,7 +222,7 @@ def main_menu():
                     print("Exiting...")
                     break
                 password = input("Enter your password, or type 'exit' to exit: ")
-                if password == "exit":
+                if password.lower() == "exit":
                     print("Exiting...")
                     break
                 if accounts.get(username) == password:
