@@ -129,7 +129,8 @@ def profile_menu(username, feedback, places):
 
                     option = input("Would you like to delete this feedback? (Y/N): ")
                     if option.lower() == "y":
-                        feedback.remove((country, user_feedback))
+                        feedback.remove((country, user_feedback)) #remove the feedback from the list
+                        save_feedback(feedback) #save the updated feedback back to the CSV
                         print("Feedback for '" + country + "' is deleted.")
                     elif option.lower() == "n":
                         print("Feedback about",country,"is not deleted")
@@ -216,7 +217,7 @@ def main_menu():
             print("Account created successfully!")
 
         elif choice == "2":
-            while True: 
+            for attempt_count in range(3):
                 username = input("Enter your username, or type 'exit' to exit: ")
                 if username.lower() == "exit":
                     print("Exiting...")
@@ -230,6 +231,10 @@ def main_menu():
                     break
                 else:
                     print("Invalid username or password. Please try again.")
+
+            else: #this else block is executed only if the loop did NOT break (too many failed attempts)
+                print("Too many failed attempts. Returning to the main menu.")
+                continue #exit to the main menu if 3 attempts are exceeded
 
         elif choice == "3":
             print("Exiting...")
