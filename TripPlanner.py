@@ -95,9 +95,9 @@ def profile_menu(username, feedback, places):
     while True:
         print("\nWelcome, " + username + "!")
         print("1. Write Feedback About a Country")
-        print("2. View my feedback")
-        print("3. Search feedback by country")
-        print("4. Search Places to visit by country")
+        print("2. View my Feedback")
+        print("3. Search Feedback by Country")
+        print("4. Search Places to Visit by Country")
         print("5. Log Out")
 
         choice = input("Enter your choice: ")
@@ -117,12 +117,12 @@ def profile_menu(username, feedback, places):
                         print("Feedback saved successfully!")
                         break  #exit the loop after saving feedback
                     else:
-                        print("No such country: " + country + ". Please enter a valid country or type 'exit' to quit.")
+                        print("No such country: " + country + ". Please enter a valid country.")
 
         elif choice == "2":
             print("\nFeedback by",username)
             found_feedback = False #flag to check if feedback exists
-            for country, user_feedback in feedback:
+            for country, user_feedback in reversed(feedback): #the feedback list is iterated in reverse order
                 if user_feedback.startswith(username + ":"):
                     found_feedback = True #feedback exists
                     print("- " + country + ": " + user_feedback.split(": ", 1)[1])
@@ -131,11 +131,11 @@ def profile_menu(username, feedback, places):
                     if option.lower() == "y":
                         feedback.remove((country, user_feedback)) #remove the feedback from the list
                         save_feedback(feedback) #save the updated feedback back to the CSV
-                        print("Feedback for '" + country + "' is deleted.")
+                        print("Feedback for",country,"is deleted.")
                     elif option.lower() == "n":
-                        print("Feedback about",country,"is not deleted")
+                        print("Feedback about",country,"is not deleted.")
                         
-            if not found_feedback: # If no feedback found
+            if not found_feedback: #if no feedback found
                 print("No feedback found.")
 
         elif choice == "3":
